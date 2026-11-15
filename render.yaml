@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: field-shift
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"

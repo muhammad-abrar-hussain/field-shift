@@ -1,0 +1,56 @@
+{
+  "location": {"nearest_point_id": 0, "distance_km": 0.8},
+  "scenario": {"year_type": "normal", "rain_change_pct": 0, "temp_change_c": 0},
+  "rotations": [
+    {
+      "id": "A",
+      "name": "Wheat, Fallow",
+      "is_current": true,
+      "crop_health": {"p10": null, "p50": null, "p90": null},
+      "water_need_mm": null,
+      "bare_days_per_year": null,
+      "erosion_risk": "medium",
+      "nitrogen_fixing": false,
+      "scores": {"water": null, "soil": null, "income": null, "erosion": null, "forage": null, "market": null, "health": null, "total": null},
+      "confidence": "low",
+      "why": ["Fixture-only contract shape for pytest."],
+      "evidence": ["USDA CDL rotation labels for Finney County sample points"],
+      "risks": ["Confirm rotation fits your equipment and markets."],
+      "data_gaps": ["Crop health quantiles require trained models (AppEEARS NDVI pending)."]
+    },
+    {
+      "id": "B",
+      "name": "Wheat, Sorghum, Fallow",
+      "is_current": false,
+      "crop_health": {"p10": null, "p50": null, "p90": null},
+      "water_need_mm": null,
+      "bare_days_per_year": null,
+      "erosion_risk": "medium",
+      "nitrogen_fixing": false,
+      "scores": {"water": null, "soil": null, "income": null, "erosion": null, "forage": null, "market": null, "health": null, "total": null},
+      "confidence": "medium",
+      "why": ["Sorghum can spread income across the rotation cycle."],
+      "evidence": ["350 sample points labelled wheat–sorghum–fallow in CDL history"],
+      "risks": ["Requires a sorghum planter."],
+      "data_gaps": ["Water need uses crop table Kc values when available."]
+    },
+    {
+      "id": "C",
+      "name": "Wheat, Forage (triticale, hay, peas)",
+      "is_current": false,
+      "crop_health": {"p10": null, "p50": null, "p90": null},
+      "water_need_mm": null,
+      "bare_days_per_year": null,
+      "erosion_risk": "low",
+      "nitrogen_fixing": false,
+      "scores": {"water": null, "soil": null, "income": null, "erosion": null, "forage": null, "market": null, "health": null, "total": null},
+      "confidence": "low",
+      "why": ["Forage crops can add ground cover between wheat crops."],
+      "evidence": ["Few Finney County pixels grow peas (CDL 2024)"],
+      "risks": ["Forage harvest and marketing differ from grain wheat."],
+      "data_gaps": ["Rotation C has limited training rows; marked low confidence in CURSOR_CONTEXT."]
+    }
+  ],
+  "best_match": "B",
+  "disclaimer": "This tool supports, and does not replace, the judgment of farmers and local agricultural experts."
+}

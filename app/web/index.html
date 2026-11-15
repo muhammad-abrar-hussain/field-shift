@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Shift · Crop rotation explorer</title>
+<meta name="description" content="Compare crop rotations for dryland wheat fields in Finney County, Kansas, using NASA Earth observations.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232F5F8F'/%3E%3Cpath d='M9 23c5-1 9-6 10-14 2 6 0 12-6 15' fill='none' stroke='%23F5F1E8' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><div><strong>Field Shift</strong><span>Crop rotation explorer · Finney County, Kansas</span></div></div>
+  <nav><a href="#explore">Explore</a><a href="#trends">Trends</a><a href="#method">How we know</a></nav>
+  <span id="apiStatus" class="status" role="status">Checking data service…</span>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">NASA Space Apps 2026 · Field Shift challenge</p>
+    <h1>Which rotation keeps your dryland wheat healthier through drought?</h1>
+    <p class="sub">Pick your field and priorities. We compare three rotations using 13 years of NASA satellite and weather data on 1,000 real Finney County fields, and show the evidence, the trade offs and how sure we are.</p>
+  </div>
+  <ol class="steps">
+    <li><b>1</b><span>Click your field on the map</span></li>
+    <li><b>2</b><span>Tell us your priorities and the year you plan for</span></li>
+    <li><b>3</b><span>Compare three rotations with evidence and risks</span></li>
+  </ol>
+</section>
+
+<main id="explore" class="layout">
+  <aside class="panel" aria-label="Your field and priorities">
+    <h2>Your field</h2>
+    <div id="map" class="map" role="application" aria-label="Map of Finney County. Click to choose your field."></div>
+    <p id="fieldInfo" class="hint">Click on the map to choose a field inside Finney County.</p>
+
+    <label class="field">What do you grow now?
+      <select id="current">
+        <option value="A">Wheat, Fallow</option>
+        <option value="B">Wheat, Sorghum, Fallow</option>
+        <option value="C">Wheat, Forage</option>
+        <option value="other">Something else</option>
+      </select>
+    </label>
+
+    <fieldset class="field"><legend>Where does water come from?</legend>
+      <div class="seg" data-name="water">
+        <button type="button" data-v="dryland" class="on">Rain only</button>
+        <button type="button" data-v="irrigated">Irrigated</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field"><legend>Soil type <small id="soilNote">(prefilled from USDA soil survey)</small></legend>
+      <div class="seg" data-name="soil">
+        <button type="button" data-v="light">Light</button>
+        <button type="button" data-v="medium" class="on">Medium</button>
+        <button type="button" data-v="heavy">Heavy</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field"><legend>What matters most this year? Pick up to 3</legend>
+      <div class="checks" id="prios">
+        <label><input type="checkbox" value="water" checked> Save water</label>
+        <label><input type="checkbox" value="income" checked> More income</label>
+        <label><input type="checkbox" value="soil" checked> Soil health</label>
+        <label><input type="checkbox" value="erosion"> Stop erosion</label>
+        <label><input type="checkbox" value="forage"> Animal feed</label>
+        <label><input type="checkbox" value="market"> Easy to sell</label>
+      </div>
+      <p id="prioErr" class="err" aria-live="polite"></p>
+    </fieldset>
+
+    <fieldset class="field"><legend>Plan for which kind of year?</legend>
+      <div class="seg" data-name="year">
+        <button type="button" data-v="normal" class="on">Normal</button>
+        <button type="button" data-v="dry">Dry</button>
+        <button type="button" data-v="hot">Hot and dry</button>
+      </div>
+    </fieldset>
+
+    <details class="field"><summary>Machinery</summary>
+      <label class="inline"><input type="checkbox" id="mSorghum" checked> I have a sorghum planter</label>
+      <label class="inline"><input type="checkbox" id="mForage" checked> I have forage equipment</label>
+    </details>
+
+    <button id="go" class="primary" type="button" disabled>Compare rotations</button>
+  </aside>
+
+  <section class="results" aria-live="polite">
+    <div id="empty" class="empty">
+      <h2>Your comparison appears here</h2>
+      <p>Choose a field on the map, set your priorities and press Compare rotations.</p>
+    </div>
+    <div id="loading" class="loading" hidden><span class="spinner" aria-hidden="true"></span>Running the comparison on NASA data…</div>
+    <div id="error" class="errbox" hidden></div>
+    <div id="summary" class="summary" hidden></div>
+    <div id="cards" class="cards"></div>
+    <p class="disclaimer">Field Shift supports, and never replaces, the judgment of farmers and local agricultural experts. Crop health is satellite greenness (NDVI), not yield or profit.</p>
+  </section>
+</main>
+
+<section id="trends" class="block">
+  <h2>Your field over the years</h2>
+  <p class="hint" id="trendHint">Choose a field to see season rain, heat days and wheat greenness by year.</p>
+  <div class="chartwrap"><canvas id="trendChart" aria-label="Season rain, heat days and peak greenness by year"></canvas></div>
+</section>
+
+<section id="method" class="block">
+  <h2>How we know</h2>
+  <div class="facts">
+    <div class="fact"><b>0.118</b><span>average error on years the model never saw (NDVI), vs 0.129 for a fair baseline without weather</span></div>
+    <div class="fact"><b>80%</b><span>of real values fall inside the range we show (p10 to p90)</span></div>
+    <div class="fact"><b>r = 0.86</b><span>NASA greenness vs USDA wheat yield, 6 published years: a sanity check, not proof</span></div>
+    <div class="fact"><b>1,490</b><span>clean wheat field years from 1,000 sample fields, 2013 to 2025</span></div>
+  </div>
+  <p class="method">Crop health = year effect (season rain and heat days, NASA POWER) + rotation effect (how each rotation's wheat compared with the county average in the same year, NASA MODIS NDVI on USDA crop maps). Effects from few fields are shrunk toward zero, and a rotation with few examples is never shown as the best match. We also tested a LightGBM model; it did not beat this simpler one, so we did not ship it.</p>
+  <div id="modelInfo" class="hint"></div>
+  <h3>Data sources</h3>
+  <ul class="sources">
+    <li><a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> daily weather, 2000 to 2025</li>
+    <li><a href="https://lpdaac.usgs.gov/products/mod13q1v061/" target="_blank" rel="noopener">NASA MODIS MOD13Q1</a> NDVI, 250 m, 16 day</li>
+    <li><a href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap" target="_blank" rel="noopener">NASA SMAP</a> soil moisture at planting</li>
+    <li><a href="https://www.earthdata.nasa.gov/data/instruments/srtm" target="_blank" rel="noopener">NASA SRTM</a> elevation</li>
+    <li><a href="https://nassgeodata.gmu.edu/CropScape/" target="_blank" rel="noopener">USDA Cropland Data Layer</a> crop history, 2013 to 2025</li>
+    <li><a href="https://websoilsurvey.nrcs.usda.gov/" target="_blank" rel="noopener">USDA SSURGO</a> soil properties</li>
+    <li><a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS QuickStats</a> county wheat yields</li>
+    <li>Crop table: FAO 56 crop coefficients, USDA AMS and Kansas State prices</li>
+  </ul>
+</section>
+
+<footer class="foot">Field Shift · NASA Space Apps Challenge 2026 · Built with NASA Earth observations and USDA data</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

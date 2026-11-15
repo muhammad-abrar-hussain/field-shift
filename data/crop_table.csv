@@ -1,0 +1,7 @@
+crop,kc_ini,kc_mid,kc_end,season_start,season_end,nitrogen_fixing,forage_value,residue_level,price_usd_per_unit,price_unit,price_source,notes
+winter_wheat,0.7,1.15,0.4,Sep 15,Jul 15,no,low,medium,5.20,bu,https://quickstats.nass.usda.gov,FAO-56 Table 12 kc_ini 0.7 non-frozen (Finney dryland default; FAO also lists 0.4 frozen). Kc mid/end from researcher sheet. Price: Finney county wheat marketing year average (NASS QuickStats; confirm year).
+sorghum,0.3,1.0,0.55,May 01,Oct 31,no,medium,medium,4.70,bu,https://quickstats.nass.usda.gov,FAO-56 Table 12. Price: Kansas grain sorghum county/district average (NASS QuickStats).
+fallow,0.05,0.05,0.05,Jan 01,Dec 31,no,low,low,0.00,none,,No crop; minimal ET for soil moisture bookkeeping only.
+triticale,0.3,1.15,0.4,Sep 15,Jun 30,no,high,medium,6.50,bu,https://ksre.k-state.edu,Kc from FAO-56 small grains proxy (no direct triticale row). Price is approximate regional forage/grain triticale — confirm local market; AMS hay report is range-only.
+other_hay,0.4,1.0,0.75,Apr 01,Sep 30,no,high,high,120.00,ton,https://www.mymarketnews.ams.usda.gov/viewReport/2885,Kc proxy from FAO-56 grass/pasture (no single other hay row). Price mid-range of Kansas Direct Hay Report (USD/ton) — range only in AMS; confirm locally.
+field_pea,0.5,1.15,0.3,Mar 15,Jun 30,yes,medium,low,5.50,bu,https://quickstats.nass.usda.gov,Finney County has almost no peas in CDL; included for rotation C rule only. Price indicative NASS pea where available.

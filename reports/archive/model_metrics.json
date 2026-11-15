@@ -1,0 +1,45 @@
+{
+  "n_train": 3167,
+  "n_test": 1207,
+  "features": [
+    "rotation_context",
+    "prev1_crop",
+    "prev2_crop",
+    "fallow_rain_mm",
+    "season_rain_mm",
+    "heavy_rain_days",
+    "heat_days",
+    "frost_days",
+    "et0_mm",
+    "water_balance_mm",
+    "mean_tmax_c",
+    "sm_planting",
+    "prev_year_bare_days",
+    "om_pct",
+    "sand_pct",
+    "silt_pct",
+    "clay_pct",
+    "awc",
+    "kwfact",
+    "slope_r",
+    "elevation_m"
+  ],
+  "train_counts_rotation_context": {
+    "other": 1504,
+    "A": 1019,
+    "B": 599,
+    "C": 45
+  },
+  "test_counts_rotation_context": {
+    "A": 523,
+    "B": 383,
+    "other": 276,
+    "C": 25
+  },
+  "mae_baseline": 0.13914795830784624,
+  "mae_model_p50": 0.1317583870313114,
+  "r2_model_p50": 0.052872121158295204,
+  "interval_coverage_p10_p90": 0.5294117647058824,
+  "status": "ok",
+  "shap_plot": "D:\\Curosr-NASA-Project\\reports\\shap_summary.png"
+}

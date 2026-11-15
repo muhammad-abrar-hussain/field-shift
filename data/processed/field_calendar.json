@@ -1,0 +1,655 @@
+{
+  "region": "Finney County, Kansas",
+  "ndvi_years": [
+    2013,
+    2025
+  ],
+  "weather_years": [
+    2000,
+    2025
+  ],
+  "low_cover_ndvi_threshold": 0.25,
+  "low_cover_threshold_note": "Low-cover months use NDVI < 0.25 (not 0.2) because 250 m MODIS pixels blend bare stubble with neighbours, so fallow fields often read 0.2\u20130.3.",
+  "interpolation": "16-day MODIS linear to daily mean; per-point monthly median across years, then rotation aggregate",
+  "wheat_crop_months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    10,
+    11,
+    12
+  ],
+  "vulnerable_heat_months": [
+    4,
+    5,
+    6
+  ],
+  "vulnerable_frost_months": [
+    3,
+    4
+  ],
+  "weather_by_month": {
+    "1": {
+      "month": 1,
+      "month_name": "Jan",
+      "heat_days_mean": 0.0,
+      "frost_days_mean": 23.12,
+      "heavy_rain_days_mean": 0.0,
+      "rain_mm_mean": 11.4,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "2": {
+      "month": 2,
+      "month_name": "Feb",
+      "heat_days_mean": 0.0,
+      "frost_days_mean": 19.69,
+      "heavy_rain_days_mean": 0.0,
+      "rain_mm_mean": 12.4,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "3": {
+      "month": 3,
+      "month_name": "Mar",
+      "heat_days_mean": 0.04,
+      "frost_days_mean": 8.92,
+      "heavy_rain_days_mean": 0.15,
+      "rain_mm_mean": 31.0,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": true
+    },
+    "4": {
+      "month": 4,
+      "month_name": "Apr",
+      "heat_days_mean": 1.12,
+      "frost_days_mean": 2.04,
+      "heavy_rain_days_mean": 0.19,
+      "rain_mm_mean": 47.9,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": true,
+      "vulnerable_frost_greenup": true
+    },
+    "5": {
+      "month": 5,
+      "month_name": "May",
+      "heat_days_mean": 5.54,
+      "frost_days_mean": 0.0,
+      "heavy_rain_days_mean": 0.35,
+      "rain_mm_mean": 75.7,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": true,
+      "vulnerable_frost_greenup": false
+    },
+    "6": {
+      "month": 6,
+      "month_name": "Jun",
+      "heat_days_mean": 15.46,
+      "frost_days_mean": 0.0,
+      "heavy_rain_days_mean": 0.23,
+      "rain_mm_mean": 81.8,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": true,
+      "vulnerable_frost_greenup": false
+    },
+    "7": {
+      "month": 7,
+      "month_name": "Jul",
+      "heat_days_mean": 22.04,
+      "frost_days_mean": 0.0,
+      "heavy_rain_days_mean": 0.19,
+      "rain_mm_mean": 87.2,
+      "wheat_window": false,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "8": {
+      "month": 8,
+      "month_name": "Aug",
+      "heat_days_mean": 19.0,
+      "frost_days_mean": 0.0,
+      "heavy_rain_days_mean": 0.08,
+      "rain_mm_mean": 74.6,
+      "wheat_window": false,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "9": {
+      "month": 9,
+      "month_name": "Sep",
+      "heat_days_mean": 10.19,
+      "frost_days_mean": 0.0,
+      "heavy_rain_days_mean": 0.15,
+      "rain_mm_mean": 44.1,
+      "wheat_window": false,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "10": {
+      "month": 10,
+      "month_name": "Oct",
+      "heat_days_mean": 1.23,
+      "frost_days_mean": 1.15,
+      "heavy_rain_days_mean": 0.31,
+      "rain_mm_mean": 43.0,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "11": {
+      "month": 11,
+      "month_name": "Nov",
+      "heat_days_mean": 0.0,
+      "frost_days_mean": 9.6,
+      "heavy_rain_days_mean": 0.08,
+      "rain_mm_mean": 15.7,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    },
+    "12": {
+      "month": 12,
+      "month_name": "Dec",
+      "heat_days_mean": 0.0,
+      "frost_days_mean": 21.16,
+      "heavy_rain_days_mean": 0.2,
+      "rain_mm_mean": 18.8,
+      "wheat_window": true,
+      "vulnerable_heat_grain_fill": false,
+      "vulnerable_frost_greenup": false
+    }
+  },
+  "rotations": {
+    "A": {
+      "rotation_id": "A",
+      "mean_ndvi_by_month": {
+        "1": 0.2451,
+        "2": 0.2418,
+        "3": 0.2766,
+        "4": 0.3454,
+        "5": 0.4102,
+        "6": 0.4116,
+        "7": 0.4594,
+        "8": 0.4381,
+        "9": 0.3457,
+        "10": 0.2936,
+        "11": 0.2837,
+        "12": 0.2711
+      },
+      "ndvi_p25_by_month": {
+        "1": 0.2259,
+        "2": 0.222,
+        "3": 0.2397,
+        "4": 0.2932,
+        "5": 0.3511,
+        "6": 0.3269,
+        "7": 0.3623,
+        "8": 0.3484,
+        "9": 0.2794,
+        "10": 0.2604,
+        "11": 0.2551,
+        "12": 0.2439
+      },
+      "ndvi_p75_by_month": {
+        "1": 0.2596,
+        "2": 0.257,
+        "3": 0.3014,
+        "4": 0.3835,
+        "5": 0.4564,
+        "6": 0.4786,
+        "7": 0.5313,
+        "8": 0.5067,
+        "9": 0.3877,
+        "10": 0.3085,
+        "11": 0.2989,
+        "12": 0.288
+      },
+      "bare_months": [
+        1,
+        2
+      ],
+      "months": [
+        {
+          "month": 1,
+          "month_name": "Jan",
+          "ndvi_mean": 0.2451,
+          "ndvi_p25": 0.2259,
+          "ndvi_p75": 0.2596,
+          "is_low_cover_month": true,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 2,
+          "month_name": "Feb",
+          "ndvi_mean": 0.2418,
+          "ndvi_p25": 0.222,
+          "ndvi_p75": 0.257,
+          "is_low_cover_month": true,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 3,
+          "month_name": "Mar",
+          "ndvi_mean": 0.2766,
+          "ndvi_p25": 0.2397,
+          "ndvi_p75": 0.3014,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 4,
+          "month_name": "Apr",
+          "ndvi_mean": 0.3454,
+          "ndvi_p25": 0.2932,
+          "ndvi_p75": 0.3835,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 5,
+          "month_name": "May",
+          "ndvi_mean": 0.4102,
+          "ndvi_p25": 0.3511,
+          "ndvi_p75": 0.4564,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 6,
+          "month_name": "Jun",
+          "ndvi_mean": 0.4116,
+          "ndvi_p25": 0.3269,
+          "ndvi_p75": 0.4786,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 7,
+          "month_name": "Jul",
+          "ndvi_mean": 0.4594,
+          "ndvi_p25": 0.3623,
+          "ndvi_p75": 0.5313,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 8,
+          "month_name": "Aug",
+          "ndvi_mean": 0.4381,
+          "ndvi_p25": 0.3484,
+          "ndvi_p75": 0.5067,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 9,
+          "month_name": "Sep",
+          "ndvi_mean": 0.3457,
+          "ndvi_p25": 0.2794,
+          "ndvi_p75": 0.3877,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 10,
+          "month_name": "Oct",
+          "ndvi_mean": 0.2936,
+          "ndvi_p25": 0.2604,
+          "ndvi_p75": 0.3085,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 11,
+          "month_name": "Nov",
+          "ndvi_mean": 0.2837,
+          "ndvi_p25": 0.2551,
+          "ndvi_p75": 0.2989,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 12,
+          "month_name": "Dec",
+          "ndvi_mean": 0.2711,
+          "ndvi_p25": 0.2439,
+          "ndvi_p75": 0.288,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        }
+      ]
+    },
+    "B": {
+      "rotation_id": "B",
+      "mean_ndvi_by_month": {
+        "1": 0.2438,
+        "2": 0.2367,
+        "3": 0.2554,
+        "4": 0.2982,
+        "5": 0.3366,
+        "6": 0.3404,
+        "7": 0.4363,
+        "8": 0.4295,
+        "9": 0.3466,
+        "10": 0.3081,
+        "11": 0.2848,
+        "12": 0.2669
+      },
+      "ndvi_p25_by_month": {
+        "1": 0.2318,
+        "2": 0.2215,
+        "3": 0.2294,
+        "4": 0.2519,
+        "5": 0.2776,
+        "6": 0.2818,
+        "7": 0.3592,
+        "8": 0.3551,
+        "9": 0.3032,
+        "10": 0.2858,
+        "11": 0.2637,
+        "12": 0.2496
+      },
+      "ndvi_p75_by_month": {
+        "1": 0.251,
+        "2": 0.244,
+        "3": 0.2686,
+        "4": 0.3243,
+        "5": 0.379,
+        "6": 0.3831,
+        "7": 0.4884,
+        "8": 0.4854,
+        "9": 0.3834,
+        "10": 0.3243,
+        "11": 0.2943,
+        "12": 0.2773
+      },
+      "bare_months": [
+        1,
+        2
+      ],
+      "months": [
+        {
+          "month": 1,
+          "month_name": "Jan",
+          "ndvi_mean": 0.2438,
+          "ndvi_p25": 0.2318,
+          "ndvi_p75": 0.251,
+          "is_low_cover_month": true,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 2,
+          "month_name": "Feb",
+          "ndvi_mean": 0.2367,
+          "ndvi_p25": 0.2215,
+          "ndvi_p75": 0.244,
+          "is_low_cover_month": true,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 3,
+          "month_name": "Mar",
+          "ndvi_mean": 0.2554,
+          "ndvi_p25": 0.2294,
+          "ndvi_p75": 0.2686,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 4,
+          "month_name": "Apr",
+          "ndvi_mean": 0.2982,
+          "ndvi_p25": 0.2519,
+          "ndvi_p75": 0.3243,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 5,
+          "month_name": "May",
+          "ndvi_mean": 0.3366,
+          "ndvi_p25": 0.2776,
+          "ndvi_p75": 0.379,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 6,
+          "month_name": "Jun",
+          "ndvi_mean": 0.3404,
+          "ndvi_p25": 0.2818,
+          "ndvi_p75": 0.3831,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 7,
+          "month_name": "Jul",
+          "ndvi_mean": 0.4363,
+          "ndvi_p25": 0.3592,
+          "ndvi_p75": 0.4884,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 8,
+          "month_name": "Aug",
+          "ndvi_mean": 0.4295,
+          "ndvi_p25": 0.3551,
+          "ndvi_p75": 0.4854,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 9,
+          "month_name": "Sep",
+          "ndvi_mean": 0.3466,
+          "ndvi_p25": 0.3032,
+          "ndvi_p75": 0.3834,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 10,
+          "month_name": "Oct",
+          "ndvi_mean": 0.3081,
+          "ndvi_p25": 0.2858,
+          "ndvi_p75": 0.3243,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 11,
+          "month_name": "Nov",
+          "ndvi_mean": 0.2848,
+          "ndvi_p25": 0.2637,
+          "ndvi_p75": 0.2943,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 12,
+          "month_name": "Dec",
+          "ndvi_mean": 0.2669,
+          "ndvi_p25": 0.2496,
+          "ndvi_p75": 0.2773,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        }
+      ]
+    },
+    "C": {
+      "rotation_id": "C",
+      "mean_ndvi_by_month": {
+        "1": 0.3004,
+        "2": 0.3029,
+        "3": 0.3736,
+        "4": 0.4802,
+        "5": 0.5274,
+        "6": 0.4721,
+        "7": 0.573,
+        "8": 0.5547,
+        "9": 0.4653,
+        "10": 0.4049,
+        "11": 0.3833,
+        "12": 0.3498
+      },
+      "ndvi_p25_by_month": {
+        "1": 0.2535,
+        "2": 0.2516,
+        "3": 0.2836,
+        "4": 0.3483,
+        "5": 0.4496,
+        "6": 0.4192,
+        "7": 0.4748,
+        "8": 0.4508,
+        "9": 0.3706,
+        "10": 0.3259,
+        "11": 0.2982,
+        "12": 0.2799
+      },
+      "ndvi_p75_by_month": {
+        "1": 0.3456,
+        "2": 0.3529,
+        "3": 0.4697,
+        "4": 0.5958,
+        "5": 0.5956,
+        "6": 0.5217,
+        "7": 0.6714,
+        "8": 0.6312,
+        "9": 0.5419,
+        "10": 0.4693,
+        "11": 0.4581,
+        "12": 0.4188
+      },
+      "bare_months": [],
+      "months": [
+        {
+          "month": 1,
+          "month_name": "Jan",
+          "ndvi_mean": 0.3004,
+          "ndvi_p25": 0.2535,
+          "ndvi_p75": 0.3456,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 2,
+          "month_name": "Feb",
+          "ndvi_mean": 0.3029,
+          "ndvi_p25": 0.2516,
+          "ndvi_p75": 0.3529,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 3,
+          "month_name": "Mar",
+          "ndvi_mean": 0.3736,
+          "ndvi_p25": 0.2836,
+          "ndvi_p75": 0.4697,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 4,
+          "month_name": "Apr",
+          "ndvi_mean": 0.4802,
+          "ndvi_p25": 0.3483,
+          "ndvi_p75": 0.5958,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 5,
+          "month_name": "May",
+          "ndvi_mean": 0.5274,
+          "ndvi_p25": 0.4496,
+          "ndvi_p75": 0.5956,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 6,
+          "month_name": "Jun",
+          "ndvi_mean": 0.4721,
+          "ndvi_p25": 0.4192,
+          "ndvi_p75": 0.5217,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 7,
+          "month_name": "Jul",
+          "ndvi_mean": 0.573,
+          "ndvi_p25": 0.4748,
+          "ndvi_p75": 0.6714,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 8,
+          "month_name": "Aug",
+          "ndvi_mean": 0.5547,
+          "ndvi_p25": 0.4508,
+          "ndvi_p75": 0.6312,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 9,
+          "month_name": "Sep",
+          "ndvi_mean": 0.4653,
+          "ndvi_p25": 0.3706,
+          "ndvi_p75": 0.5419,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 10,
+          "month_name": "Oct",
+          "ndvi_mean": 0.4049,
+          "ndvi_p25": 0.3259,
+          "ndvi_p75": 0.4693,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 11,
+          "month_name": "Nov",
+          "ndvi_mean": 0.3833,
+          "ndvi_p25": 0.2982,
+          "ndvi_p75": 0.4581,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        },
+        {
+          "month": 12,
+          "month_name": "Dec",
+          "ndvi_mean": 0.3498,
+          "ndvi_p25": 0.2799,
+          "ndvi_p75": 0.4188,
+          "is_low_cover_month": false,
+          "erosion_risk_heavy_rain_when_low_cover": false
+        }
+      ]
+    }
+  },
+  "point_counts": {
+    "A": 306,
+    "B": 350,
+    "C": 156
+  },
+  "summer_cover_comparison": {
+    "A_jul_sep_mean_ndvi": 0.4143959739499145,
+    "B_jul_sep_mean_ndvi": 0.4041482251920123,
+    "B_higher_summer_cover_than_A": false,
+    "note": "B Jul-Sep mean NDVI 0.404 vs A 0.414 (diff -0.010); B does not show higher summer cover than A."
+  }
+}

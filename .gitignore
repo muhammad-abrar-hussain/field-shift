@@ -1,0 +1,17 @@
+.venv/
+venv/
+.env
+data/raw/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+field_shift_final.zip
+field_shift_web.zip
