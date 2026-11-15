@@ -54,6 +54,7 @@
   });
 
   async function selectField(lat, lon) {
+    let ok = false;
     state.lat = +(+lat).toFixed(5); state.lon = +(+lon).toFixed(5);
     const ll = [state.lat, state.lon];
     if (marker) marker.setLatLng(ll); else marker = L.marker(ll, { icon: pin }).addTo(map);
@@ -72,16 +73,19 @@
       if (om !== undefined && om !== null) bits.push(`organic matter ${num(om, 1)}%`);
       if (tex) bits.push(`${tex} soil`);
       $("fieldInfo").textContent = bits.length ? `Field found: ${bits.join(", ")}.` : "Field found.";
+      ok = true;
     } catch (err) {
       $("fieldInfo").textContent = `${err.message}. Try a point inside Finney County cropland.`;
     }
     loadTrends();
+    return ok;
   }
 
   map.on("click", (e) => selectField(e.latlng.lat, e.latlng.lng));
 
-  // Land on a real field rather than an empty map.
-  selectField(DEFAULT_FIELD.lat, DEFAULT_FIELD.lon);
+  // Land on a real field and show its comparison straight away, so the results
+  // panel is never an empty placeholder on arrival.
+  selectField(DEFAULT_FIELD.lat, DEFAULT_FIELD.lon).then((ok) => { if (ok) runCompare(); });
 
   // Segmented controls
   function setSeg(name, v) {
@@ -101,7 +105,7 @@
   });
 
   // Compare
-  $("go").addEventListener("click", async () => {
+  async function runCompare() {
     if (state.lat === null) { $("fieldInfo").textContent = "Click your field on the map first."; return; }
     const priorities = [...$("prios").querySelectorAll("input:checked")].map((i) => i.value);
     const body = {
@@ -118,7 +122,9 @@
       $("error").innerHTML = `<b>We could not run the comparison.</b><br>${esc(err.message)}`;
       $("error").hidden = false;
     } finally { $("loading").hidden = true; $("go").disabled = false; }
-  });
+  }
+
+  $("go").addEventListener("click", runCompare);
 
   function render(r, req) {
     const rots = (r.rotations || []).slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
