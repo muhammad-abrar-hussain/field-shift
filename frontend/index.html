@@ -12,6 +12,55 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- Full-screen intro. Canvas draws the aerial flyover; drop an intro.mp4 next to
+     this file and it is used instead, with the canvas as the fallback. -->
+<div id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="intro-bg" aria-hidden="true">
+    <img class="shot on" src="intro-wheat.jpg" alt="">
+    <img class="shot" src="intro-farmer.jpg" alt="">
+    <video id="introVid" muted loop playsinline preload="none">
+      <source src="intro.mp4" type="video/mp4">
+    </video>
+    <span class="intro-scrim"></span>
+  </div>
+
+  <div class="credit">
+    <button id="creditBtn" class="credit-btn" type="button" aria-expanded="false"
+            aria-controls="creditBox" aria-label="Photo credit">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.4"/>
+      </svg>
+    </button>
+    <div id="creditBox" class="credit-box" hidden>
+      <b>Photography</b>
+      <p>Wheat harvest and conservation field photos by the
+         <a href="https://www.nrcs.usda.gov/" target="_blank" rel="noopener">USDA Natural
+         Resources Conservation Service</a>.</p>
+      <p>Works of the U.S. federal government — public domain.</p>
+    </div>
+  </div>
+
+  <div class="intro-inner">
+    <p class="intro-eyebrow">NASA Space Apps 2026 · Finney County, Kansas</p>
+    <h1 id="introTitle">Which rotation keeps your dryland wheat healthier through drought?</h1>
+    <p class="intro-sub">Three rotations, compared on 13 years of NASA satellite and weather data from 1,000 real fields.</p>
+
+    <ol class="intro-steps">
+      <li><b>1</b><span>Pick your field on the map</span></li>
+      <li><b>2</b><span>Tell us what matters most to you</span></li>
+      <li><b>3</b><span>Compare the three rotations side by side</span></li>
+    </ol>
+
+    <button id="introGo" class="intro-cta" type="button">
+      Run rotation for next crop
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </button>
+    <button id="introSkip" class="intro-skip" type="button">Skip intro</button>
+  </div>
+</div>
+
 <header class="topbar">
   <div class="brand">
     <span class="logo" aria-hidden="true">
@@ -49,22 +98,51 @@
 </header>
 
 <section class="hero">
-  <div>
-    <p class="eyebrow">NASA Space Apps 2026 · Field Shift challenge</p>
-    <h1>Which rotation keeps your dryland wheat healthier through drought?</h1>
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>NASA Space Apps 2026 · Field Shift challenge</p>
+    <h1>Which rotation keeps your dryland wheat <span class="hl">healthier through drought</span>?</h1>
     <p class="sub">Pick your field and priorities. We compare three rotations using 13 years of NASA satellite and weather data on 1,000 real Finney County fields, and show the evidence, the trade offs and how sure we are.</p>
   </div>
+
   <ol class="steps">
-    <li><b>1</b><span>Click your field on the map</span></li>
-    <li><b>2</b><span>Tell us your priorities and the year you plan for</span></li>
-    <li><b>3</b><span>Compare three rotations with evidence and risks</span></li>
+    <li>
+      <span class="step-n">1</span>
+      <span class="step-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
+        </svg>
+      </span>
+      <span class="step-t">Click your field on the map</span>
+    </li>
+    <li>
+      <span class="step-n">2</span>
+      <span class="step-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.1" fill="currentColor" stroke="none"/>
+          <circle cx="15" cy="12" r="2.1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="17" r="2.1" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="step-t">Tell us your priorities and the year you plan for</span>
+    </li>
+    <li>
+      <span class="step-n">3</span>
+      <span class="step-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M5 20V11M12 20V5M19 20v-6"/><path d="M3 20h18"/>
+        </svg>
+      </span>
+      <span class="step-t">Compare three rotations with evidence and risks</span>
+    </li>
   </ol>
 </section>
 
 <main id="explore" class="layout">
   <aside class="panel" aria-label="Your field and priorities">
     <h2>Your field</h2>
-    <div id="map" class="map" role="application" aria-label="Map of Finney County. Click to choose your field."></div>
+    <div class="mapwrap">
+      <div id="map" class="map" role="application" aria-label="Map of Finney County. Click to choose your field."></div>
+      <p id="mapNote" class="mapnote">Loading measured fields…</p>
+    </div>
     <p id="fieldInfo" class="hint">Click on the map to choose a field inside Finney County.</p>
 
     <label class="field">What do you grow now?

@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
 from src.compare import (  # noqa: E402
     FINAL_MODEL,
     _artifacts_ready,
+    _sample_points,
     compare,
     field_info_response,
     load_field_calendar,
@@ -186,6 +187,19 @@ def trends(lat: float = Query(...), lon: float = Query(...)):
     if data.get("error"):
         raise HTTPException(status_code=503, detail=data["error"])
     return data
+
+
+@app.get("/sample-points")
+def sample_points():
+    """Coordinates of the measured fields, so the map can show where data exists."""
+    pts = _sample_points()
+    if pts is None or pts.empty:
+        raise HTTPException(status_code=503, detail="sample_points missing")
+    return {
+        "count": int(len(pts)),
+        "max_distance_km": MAX_DIST_KM,
+        "points": [[round(float(r.lat), 5), round(float(r.lon), 5)] for r in pts.itertuples()],
+    }
 
 
 @app.get("/calendar")

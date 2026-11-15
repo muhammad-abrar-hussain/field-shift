@@ -21,13 +21,42 @@
   api("/health").then(() => { $("apiStatus").textContent = "Data service online"; $("apiStatus").className = "status ok"; })
     .catch(() => { $("apiStatus").textContent = "Data service offline"; $("apiStatus").className = "status down"; });
 
-  // Map
-  const map = L.map("map", { scrollWheelZoom: false }).setView([37.98, -100.86], 9);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 15, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+  // Map. Starts on a real sample field so the page is never empty on arrival:
+  // point 283, a textbook wheat-then-fallow history near the middle of the county.
+  const DEFAULT_FIELD = { lat: 37.97648, lon: -100.75804 };
+
+  const map = L.map("map", { scrollWheelZoom: false, zoomControl: false })
+    .setView([DEFAULT_FIELD.lat, DEFAULT_FIELD.lon], 11);
+  L.control.zoom({ position: "topright" }).addTo(map);
+
+  const streets = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 16, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+  const satellite = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 17, attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics" });
+  L.control.layers({ "Map": streets, "Satellite": satellite }, null, { position: "topright" }).addTo(map);
+
+  // The measured fields. Showing them stops people clicking where we have no data.
+  const fieldDots = L.layerGroup().addTo(map);
+  api("/sample-points").then((d) => {
+    (d.points || []).forEach(([la, lo]) => {
+      L.circleMarker([la, lo], {
+        radius: 2.6, fillColor: "#F0C97A", fillOpacity: .95, interactive: false,
+        color: "#5A3E12", weight: 1, opacity: .7,   // outlined so it reads on map *and* satellite
+      }).addTo(fieldDots);
+    });
+    $("mapNote").textContent = `${d.count} measured fields · tap within ${d.max_distance_km} km of one`;
+  }).catch(() => { $("mapNote").textContent = "Tap anywhere on Finney County farmland"; });
+
   let marker = null;
-  map.on("click", async (e) => {
-    state.lat = +e.latlng.lat.toFixed(5); state.lon = +e.latlng.lng.toFixed(5);
-    if (marker) marker.setLatLng(e.latlng); else marker = L.marker(e.latlng).addTo(map);
+  const pin = L.divIcon({
+    className: "fieldPin", html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 11],
+  });
+
+  async function selectField(lat, lon) {
+    state.lat = +(+lat).toFixed(5); state.lon = +(+lon).toFixed(5);
+    const ll = [state.lat, state.lon];
+    if (marker) marker.setLatLng(ll); else marker = L.marker(ll, { icon: pin }).addTo(map);
     $("fieldInfo").textContent = `Field at ${state.lat}, ${state.lon}. Looking up soil and crop history…`;
     $("go").disabled = false;
     try {
@@ -47,7 +76,12 @@
       $("fieldInfo").textContent = `${err.message}. Try a point inside Finney County cropland.`;
     }
     loadTrends();
-  });
+  }
+
+  map.on("click", (e) => selectField(e.latlng.lat, e.latlng.lng));
+
+  // Land on a real field rather than an empty map.
+  selectField(DEFAULT_FIELD.lat, DEFAULT_FIELD.lon);
 
   // Segmented controls
   function setSeg(name, v) {
@@ -152,4 +186,69 @@
       });
     } catch (err) { $("trendHint").textContent = `Trends unavailable: ${err.message}`; }
   }
+
+  // ---- Full-screen intro -------------------------------------------------
+  // Real USDA field photography, slowly cross-fading and drifting. Drop an
+  // intro.mp4 beside this file and it plays over the stills instead.
+  (function intro() {
+    const el = $("intro");
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const shots = [...el.querySelectorAll(".shot")];
+    let i = 0, timer = null;
+
+    if (shots.length > 1 && !reduce) {
+      timer = setInterval(() => {
+        shots[i].classList.remove("on");
+        i = (i + 1) % shots.length;
+        shots[i].classList.add("on");
+      }, 6000);
+    }
+
+    const vid = $("introVid");
+    vid.addEventListener("canplay", () => {
+      vid.classList.add("on");
+      if (timer) { clearInterval(timer); timer = null; }
+      vid.play().catch(() => {});
+    }, { once: true });
+
+    function close(goToCompare) {
+      if (timer) clearInterval(timer);
+      el.classList.add("out");
+      document.body.classList.remove("locked");
+      // Scroll only once the overlay is gone and the scroll lock has lifted,
+      // otherwise the smooth scroll is swallowed.
+      setTimeout(() => {
+        el.remove();
+        if (!goToCompare) return;
+        const target = document.getElementById("explore");
+        if (!target) return;
+        const head = document.querySelector(".topbar");
+        const offset = (head ? head.getBoundingClientRect().height : 0) + 12;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+      }, 430);
+    }
+
+    const cBtn = $("creditBtn"), cBox = $("creditBox");
+    if (cBtn && cBox) {
+      cBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = cBox.hidden;
+        cBox.hidden = !open;
+        cBtn.setAttribute("aria-expanded", String(open));
+      });
+      // click anywhere else closes it, without dismissing the intro
+      el.addEventListener("click", () => {
+        if (!cBox.hidden) { cBox.hidden = true; cBtn.setAttribute("aria-expanded", "false"); }
+      });
+    }
+
+    document.body.classList.add("locked");
+    $("introGo").addEventListener("click", () => close(true));
+    $("introSkip").addEventListener("click", () => close(false));
+    addEventListener("keydown", (e) => { if (e.key === "Escape") close(false); }, { once: true });
+    $("introGo").focus();
+  })();
+
 })();
