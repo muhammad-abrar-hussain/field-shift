@@ -146,24 +146,51 @@
     const conf = (x.confidence || "").toLowerCase();
     const s = x.scores || {};
     const bare = new Set(x.bare_months || []);
-    const row = (k, v) => (v === null || v === undefined || v === "" ? "" : `<span>${k}</span><b>${esc(v)}</b>`);
+    // v may carry small markup (a unit suffix), so callers pass safe content:
+    // numbers straight from the API, or strings already run through esc().
+    const row = (k, v) => (v === null || v === undefined || v === "" ? "" : `<div class="kvrow"><span>${k}</span><b>${v}</b></div>`);
     const list = (cls, title, items) => (items && items.length ? `<div class="list ${cls}"><h4>${title}</h4><ul>${items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>` : "");
+
+    // Risks and gaps stay visible as a count on the card face even while the
+    // text sits inside the expander, so a thin-evidence rotation never looks
+    // as solid as a well-measured one.
+    const nRisk = (x.risks || []).length, nGap = (x.data_gaps || []).length;
+    const flags = [
+      nRisk ? `<span class="flag f-risk">${nRisk} risk${nRisk > 1 ? "s" : ""}</span>` : "",
+      nGap ? `<span class="flag f-gap">${nGap} data gap${nGap > 1 ? "s" : ""}</span>` : "",
+    ].join("");
+    const details = list("why", "Why", x.why) + list("ev", "Evidence", x.evidence)
+      + list("risk", "Risks", x.risks) + list("gap", "Data gaps", x.data_gaps);
+
     return `<article class="card ${isBest ? "best" : ""}">
-      <div class="top"><div><div class="opt">Option ${esc(x.id)}</div><h3>${esc(x.name)}</h3></div>
-        <div class="badges">${isBest ? '<span class="badge b-best">Best match</span>' : ""}${x.is_current ? '<span class="badge b-cur">Your current</span>' : ""}${conf ? `<span class="badge b-${esc(conf)}">${esc(conf[0].toUpperCase() + conf.slice(1))} confidence</span>` : ""}</div></div>
-      ${s.total !== undefined && s.total !== null ? `<div class="score"><b>${num(s.total, 1)}</b><span>/ 10 for your priorities</span></div>` : ""}
-      ${Number.isFinite(mid) ? `<div><div class="hint">Expected wheat health (peak NDVI)</div>
+      <div class="top">
+        <div class="opt">Option ${esc(x.id)}</div>
+        <h3>${esc(x.name)}</h3>
+      </div>
+      <div class="badges">${isBest ? '<span class="badge b-best">Best match</span>' : ""}${x.is_current ? '<span class="badge b-cur">Your current</span>' : ""}${conf ? `<span class="badge b-${esc(conf)}">${esc(conf[0].toUpperCase() + conf.slice(1))} confidence</span>` : ""}${flags}</div>
+
+      ${s.total !== undefined && s.total !== null ? `<div class="score"><b>${num(s.total, 1)}</b><span>out of 10<br>for your priorities</span></div>` : ""}
+
+      ${Number.isFinite(mid) ? `<div class="health">
+        <div class="lbl">Expected wheat health <i>peak NDVI</i></div>
         <div class="range"><div class="band" style="left:${pos(lo)}%;width:${Math.max(2, pos(hi) - pos(lo))}%"></div><div class="mid" style="left:${pos(mid)}%"></div></div>
-        <div class="rangeLbl"><span>${num(lo)}</span><span><b>${num(mid)}</b> likely</span><span>${num(hi)}</span></div></div>` : ""}
+        <div class="rangeLbl"><span>${num(lo)}<i>low</i></span><span class="mid-v"><b>${num(mid)}</b><i>likely</i></span><span>${num(hi)}<i>high</i></span></div>
+      </div>` : ""}
+
       <div class="kv">
-        ${row("Water need", x.water_need_mm !== null && x.water_need_mm !== undefined ? `${Math.round(x.water_need_mm)} mm / year` : null)}
-        ${row("Bare days", x.bare_days_per_year !== null && x.bare_days_per_year !== undefined ? `${Math.round(x.bare_days_per_year)} / year` : null)}
-        ${row("Erosion risk", x.erosion_risk)}
+        ${row("Water need", x.water_need_mm !== null && x.water_need_mm !== undefined ? `${Math.round(x.water_need_mm)} mm<i>/yr</i>` : null)}
+        ${row("Bare days", x.bare_days_per_year !== null && x.bare_days_per_year !== undefined ? `${Math.round(x.bare_days_per_year)}<i>/yr</i>` : null)}
+        ${row("Erosion risk", x.erosion_risk ? esc(x.erosion_risk[0].toUpperCase() + x.erosion_risk.slice(1)) : null)}
         ${row("Nitrogen fixing", x.nitrogen_fixing === undefined ? null : x.nitrogen_fixing ? "Yes" : "No")}
       </div>
-      <div><div class="hint">Low cover months</div><div class="cal">${MONTHS.map((_, i) => `<i class="${bare.has(i + 1) ? "bare" : ""}" title="${bare.has(i + 1) ? "Low cover" : "Covered"}"></i>`).join("")}</div>
-        <div class="calLbl">${MONTHS.map((m) => `<span>${m}</span>`).join("")}</div></div>
-      ${list("why", "Why", x.why)}${list("ev", "Evidence", x.evidence)}${list("risk", "Risks", x.risks)}${list("gap", "Data gaps", x.data_gaps)}
+
+      <div class="cover">
+        <div class="lbl">Low cover months</div>
+        <div class="cal">${MONTHS.map((_, i) => `<i class="${bare.has(i + 1) ? "bare" : ""}" title="${bare.has(i + 1) ? "Low cover" : "Covered"}"></i>`).join("")}</div>
+        <div class="calLbl">${MONTHS.map((m) => `<span>${m}</span>`).join("")}</div>
+      </div>
+
+      ${details ? `<details class="more"><summary>Why this, and the evidence</summary><div class="more-in">${details}</div></details>` : ""}
     </article>`;
   }
 
@@ -181,14 +208,55 @@
       const ndvi = rows.map((r) => (r.peak_ndvi === undefined ? null : r.peak_ndvi));
       $("trendHint").textContent = "Season rain (October to June) and heat days from NASA POWER, peak wheat greenness from NASA MODIS.";
       if (chart) chart.destroy();
-      chart = new Chart($("trendChart"), {
+      Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = "#615D54";
+      const ctx = $("trendChart").getContext("2d");
+      const rainFill = ctx.createLinearGradient(0, 0, 0, 320);
+      rainFill.addColorStop(0, "rgba(124,166,206,.95)");
+      rainFill.addColorStop(1, "rgba(124,166,206,.45)");
+      chart = new Chart(ctx, {
         data: { labels: years, datasets: [
-          { type: "bar", label: "Season rain (mm)", data: rain, backgroundColor: "#9CC0E0", yAxisID: "y" },
-          { type: "line", label: "Heat days above 32 °C", data: heat, borderColor: "#B7791F", backgroundColor: "#B7791F", yAxisID: "y1", tension: .25 },
-          { type: "line", label: "Peak NDVI", data: ndvi, borderColor: "#2E7D4F", backgroundColor: "#2E7D4F", yAxisID: "y2", tension: .25, spanGaps: true },
+          { type: "bar", label: "Season rain (mm)", data: rain, backgroundColor: rainFill,
+            borderRadius: 5, borderSkipped: false, maxBarThickness: 34, yAxisID: "y", order: 3 },
+          { type: "line", label: "Heat days above 32 °C", data: heat, borderColor: "#C2851F",
+            backgroundColor: "#C2851F", borderWidth: 2.5, yAxisID: "y1", tension: .35,
+            pointRadius: 0, pointHoverRadius: 5, order: 1 },
+          { type: "line", label: "Peak NDVI", data: ndvi, borderColor: "#2E7D4F",
+            backgroundColor: "#2E7D4F", borderWidth: 2.5, borderDash: [5, 4], yAxisID: "y2",
+            tension: .35, pointRadius: 3.5, pointHoverRadius: 6, spanGaps: true, order: 2 },
         ] },
-        options: { maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
-          scales: { y: { title: { display: true, text: "Rain (mm)" } }, y1: { position: "right", grid: { drawOnChartArea: false }, title: { display: true, text: "Heat days" } }, y2: { display: false, min: 0, max: 1 } } },
+        options: {
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          layout: { padding: { top: 6 } },
+          plugins: {
+            legend: { position: "top", align: "end",
+              labels: { usePointStyle: true, pointStyle: "circle", boxWidth: 8, boxHeight: 8,
+                        padding: 16, font: { size: 12, weight: "500" } } },
+            tooltip: {
+              backgroundColor: "rgba(34,33,29,.95)", padding: 11, cornerRadius: 8,
+              titleFont: { size: 13, weight: "700" }, bodyFont: { size: 12.5 },
+              bodySpacing: 5, displayColors: true, usePointStyle: true, boxPadding: 4,
+              callbacks: { label: (c) => {
+                if (c.parsed.y === null) return `${c.dataset.label}: no data`;
+                const u = c.dataset.yAxisID === "y" ? " mm" : c.dataset.yAxisID === "y1" ? " days" : "";
+                return `${c.dataset.label}: ${c.parsed.y}${u}`;
+              } },
+            },
+          },
+          scales: {
+            x: { grid: { display: false }, border: { color: "#E2DCCF" },
+                 ticks: { font: { size: 11.5 } } },
+            y: { title: { display: true, text: "Rain (mm)", font: { size: 11.5, weight: "600" } },
+                 grid: { color: "rgba(226,220,207,.7)" }, border: { display: false },
+                 beginAtZero: true, ticks: { font: { size: 11 }, maxTicksLimit: 6 } },
+            y1: { position: "right", title: { display: true, text: "Heat days", font: { size: 11.5, weight: "600" } },
+                  grid: { drawOnChartArea: false }, border: { display: false },
+                  beginAtZero: true, ticks: { font: { size: 11 }, maxTicksLimit: 6 } },
+            y2: { display: false, min: 0, max: 1 },
+          },
+        },
       });
     } catch (err) { $("trendHint").textContent = `Trends unavailable: ${err.message}`; }
   }
