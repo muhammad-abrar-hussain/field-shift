@@ -30,7 +30,7 @@ details summary{cursor:pointer}
 .spinner{width:18px;height:18px;border-radius:50%;border:3px solid var(--blue-bg);border-top-color:var(--blue);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .errbox{border-style:solid;border-color:#F0C4BD;background:var(--bad-bg);color:var(--bad);text-align:left}
 .summary{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow)}.summary b{font-family:'Space Grotesk'}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
 .card.best{border:2px solid var(--blue)}
 .card .top{display:block}.card .opt{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.09em;text-transform:uppercase}.card h3{margin:5px 0 0;font-size:18.5px;line-height:1.26;min-height:2.52em}
@@ -144,7 +144,7 @@ body.locked{overflow:hidden}
 .f-gap{background:var(--bad-bg);color:var(--bad)}
 
 /* collapsible reasoning keeps the card face short */
-.more{border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.more{border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
 .more summary{cursor:pointer;list-style:none;font-size:13.5px;font-weight:600;color:var(--blue);
   display:flex;align-items:center;gap:7px;padding:3px 0}
 .more summary::-webkit-details-marker{display:none}
