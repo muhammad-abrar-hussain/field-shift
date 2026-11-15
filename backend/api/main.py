@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Literal
@@ -27,7 +28,7 @@ from src.compare import (  # noqa: E402
 )
 
 PROJECT_ROOT = ROOT
-WEB_DIR = ROOT / "app" / "web"
+WEB_DIR = ROOT.parent / "frontend"
 REPORTS_DIR = ROOT / "reports"
 ARCHIVE_METRICS = ROOT / "reports" / "archive" / "model_metrics_v2.json"
 MAX_DIST_KM = 3.0
@@ -40,9 +41,14 @@ _CORS_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+# Extra origins for the deployed frontend (comma separated), e.g. the Vercel URL.
+_CORS_ORIGINS += [
+    o.strip() for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

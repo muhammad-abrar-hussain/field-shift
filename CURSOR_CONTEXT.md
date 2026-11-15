@@ -121,20 +121,32 @@ Feature store simplification: the API uses the nearest of the 1000 sample points
 
 ## 6. Repo structure
 
+Split into `frontend/` (static, Vercel) and `backend/` (Docker, Render):
+
 ```
 field-shift/
   CURSOR_CONTEXT.md        (this file)
-  PROJECT_BRIEF.md
-  requirements.txt  .env  .env.example  .gitignore  README.md
-  data/raw/{cdl,appeears,power,imerg,nass,soil,nwis}
-  data/processed/
-  data/crop_table.csv       (from researcher)
-  src/                      (numbered pipeline scripts)
-  api/main.py               (FastAPI)
-  api/mock_compare.json     (for the app developer)
-  app/streamlit_app.py      (developer)
-  models/  reports/  tests/
+  PROJECT_BRIEF.md  README.md
+  .env  .env.example  .gitignore
+  render.yaml               (Render blueprint, builds backend/Dockerfile)
+  vercel.json               (Vercel static config, publishes frontend/)
+
+  frontend/                 (plain HTML/CSS/JS UI)
+    index.html  app.js  style.css  config.js  favicon.svg
+
+  backend/
+    requirements.txt  Dockerfile
+    data/raw/{cdl,appeears,power,imerg,nass,soil,nwis}   (git-ignored)
+    data/processed/
+    data/crop_table.csv     (from researcher)
+    src/                    (numbered pipeline scripts)
+    api/main.py             (FastAPI; serves ../frontend at /)
+    models/  reports/  scripts/  tests/
 ```
+
+Paths inside `backend/` are unchanged — every script anchors on
+`Path(__file__).resolve().parents[1]`, which now resolves to `backend/`.
+Run the API and tests from inside `backend/`.
 
 ---
 

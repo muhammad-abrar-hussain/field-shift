@@ -3,8 +3,11 @@ services:
     name: field-shift
     runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: ALLOWED_ORIGINS
+        sync: false

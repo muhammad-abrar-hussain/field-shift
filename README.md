@@ -25,32 +25,48 @@ Details: `reports/model_card.md`, `models/final_model.json`, `reports/nass_valid
 
 ## Run locally
 
-**Requirements:** Python 3.10+ (see `requirements.txt`; GDAL may be needed for raster steps when rebuilding raw data).
+**Requirements:** Python 3.10+ (see `backend/requirements.txt`; GDAL may be needed for raster steps when rebuilding raw data).
 
 ```bash
 python -m venv .venv
 # Windows: .\.venv\Scripts\Activate.ps1
 # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
+
+cd backend
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
-Open **[http://localhost:8000/](http://localhost:8000/)** (one process serves the API and the web UI).
+Open **[http://localhost:8000/](http://localhost:8000/)** (one process serves the API and the web UI from `frontend/`).
 
-Optional static UI on port 5500: `python -m http.server 5500` from `app/web` — `config.js` points API calls to `http://localhost:8000`.
+Optional static UI on port 5500: `python -m http.server 5500` from `frontend/` — `config.js` points API calls to `http://localhost:8000`.
 
-**Tests:**
+**Tests:** run from `backend/`.
 
 ```bash
-python -m pytest tests/
+cd backend && python -m pytest tests/
 ```
 
-## Deploy on Render
+**Note:** `earthengine-api` is only needed to re-download data from Google Earth Engine (`src/03b_gee_extract.py`). On machines without a prebuilt `cryptography` wheel it needs a Rust toolchain; skip it if you are not re-downloading.
 
-1. Push this repository to GitHub (see below).
-2. In Render: **New → Web Service → Docker**, connect the repo.
-3. Render reads `render.yaml` (Dockerfile, health check `/health`, free plan).
-4. Artifacts (`models/final_model.json`, `data/processed/*.parquet`, etc.) must be in the repo or build image—you do not need `data/raw/` at runtime.
+## Deploy
+
+The repo splits into a static `frontend/` and a Dockerised `backend/`, so they deploy separately.
+
+**Backend — Render (Docker):**
+
+1. In Render: **New → Blueprint**, connect this repo.
+2. Render reads `render.yaml` (builds `backend/Dockerfile` with the repo root as context, health check `/health`, free plan).
+3. Set the `ALLOWED_ORIGINS` env var to your Vercel URL (comma separated for several). Any `*.vercel.app` origin is already allowed by default.
+4. Artifacts (`backend/models/final_model.json`, `backend/data/processed/*.parquet`) are committed—`backend/data/raw/` is not needed at runtime.
+
+The container serves the API *and* the UI, so the Render URL alone is a complete working app.
+
+**Frontend — Vercel (static):**
+
+1. In Vercel: **Add New → Project**, import this repo.
+2. `vercel.json` publishes `frontend/` as-is (no build step, no framework).
+3. After the backend is live, set `window.API_URL` in `frontend/config.js` to the Render URL (e.g. `https://field-shift.onrender.com`, no trailing slash) and redeploy.
 
 ## Rebuild `data/raw/` and pipeline
 
@@ -89,14 +105,25 @@ Replace `<username>` with your GitHub username or organization.
 ## Project layout
 
 ```text
-api/                 FastAPI (serves app/web at /)
-app/web/             Plain HTML/CSS/JS UI
-data/crop_table.csv
-data/processed/      feature_store, calendar, sample_points (runtime)
-models/              final_model.json
-reports/             Figures + model_card.md (+ archive/ for older metrics)
-src/                 Numbered pipeline and compare logic
-tests/               pytest
+frontend/            Plain HTML/CSS/JS UI (static; deploys to Vercel)
+  index.html
+  app.js, style.css, config.js
+
+backend/             Python API, model and pipeline (Docker; deploys to Render)
+  api/               FastAPI (serves ../frontend at /)
+  src/               Numbered pipeline and compare logic
+  data/crop_table.csv
+  data/processed/    feature_store, calendar, sample_points (runtime)
+  data/raw/          Source downloads (git-ignored, not needed at runtime)
+  models/            final_model.json
+  reports/           Figures + model_card.md (+ archive/ for older metrics)
+  scripts/           Release zip and debug helpers
+  tests/             pytest
+  requirements.txt
+  Dockerfile
+
+render.yaml          Render blueprint (backend)
+vercel.json          Vercel config (frontend)
 ```
 
 ## License and disclaimer

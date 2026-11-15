@@ -6,7 +6,7 @@ import os
 import zipfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "field_shift_final.zip"
 SKIP_FILES = {".env", "field_shift_final.zip", "field_shift_web.zip"}
 
@@ -19,7 +19,12 @@ def skip_file(p: Path) -> bool:
         return True
     if ".git" in rel.parts or ".venv" in rel.parts or "venv" in rel.parts:
         return True
-    return bool(len(rel.parts) >= 2 and rel.parts[0] == "data" and rel.parts[1] == "raw")
+    return bool(
+        len(rel.parts) >= 3
+        and rel.parts[0] == "backend"
+        and rel.parts[1] == "data"
+        and rel.parts[2] == "raw"
+    )
 
 
 def main() -> None:
