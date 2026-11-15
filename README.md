@@ -66,7 +66,7 @@ The container serves the API *and* the UI, so the Render URL alone is a complete
 
 1. In Vercel: **Add New → Project**, import this repo.
 2. `vercel.json` publishes `frontend/` as-is (no build step, no framework).
-3. After the backend is live, set `window.API_URL` in `frontend/config.js` to the Render URL (e.g. `https://field-shift.onrender.com`, no trailing slash) and redeploy.
+3. After the backend is live, set `window.API_URL` in `frontend/config.js` to the Render URL (e.g. `https://field-shift-nasa.onrender.com`, no trailing slash) and redeploy.
 
 ## Rebuild `data/raw/` and pipeline
 
