@@ -87,7 +87,7 @@
   });
 
   function render(r, req) {
-    const rots = (r.rotations || []).slice().sort((a, b) => (b.scores?.total ?? -1) - (a.scores?.total ?? -1));
+    const rots = (r.rotations || []).slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
     const best = r.best_match;
     const sc = r.scenario || {};
     const yearLabel = { normal: "a normal year", dry: "a dry year", hot: "a hot and dry year" }[req.year_type] || req.year_type;
