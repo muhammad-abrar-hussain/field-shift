@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Field Shift · Crop rotation explorer</title>
 <meta name="description" content="Compare crop rotations for dryland wheat fields in Finney County, Kansas, using NASA Earth observations.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232F5F8F'/%3E%3Cpath d='M9 23c5-1 9-6 10-14 2 6 0 12-6 15' fill='none' stroke='%23F5F1E8' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%2324496E'/%3E%3Ccircle cx='30.5' cy='10' r='4.2' fill='%23F0C97A'/%3E%3Cpath d='M0 21 Q20 15.5 40 21 V26 Q20 20.5 0 26 Z' fill='%238FB97A'/%3E%3Cpath d='M0 26 Q20 20.5 40 26 V31 Q20 25.5 0 31 Z' fill='%23E3B964'/%3E%3Cpath d='M0 31 Q20 25.5 40 31 V36 Q20 30.5 0 36 Z' fill='%23C08C57'/%3E%3Cpath d='M0 36 Q20 30.5 40 36 V40 H0 Z' fill='%236E8F5C'/%3E%3Cg fill='%23F6F3EC'%3E%3Crect x='13.75' y='12' width='1.5' height='13' rx='0.75'/%3E%3Cellipse cx='12.1' cy='19.3' rx='1.5' ry='2.7' transform='rotate(-32 12.1 19.3)'/%3E%3Cellipse cx='16.9' cy='19.3' rx='1.5' ry='2.7' transform='rotate(32 16.9 19.3)'/%3E%3Cellipse cx='12.3' cy='15.1' rx='1.5' ry='2.7' transform='rotate(-32 12.3 15.1)'/%3E%3Cellipse cx='16.7' cy='15.1' rx='1.5' ry='2.7' transform='rotate(32 16.7 15.1)'/%3E%3Cellipse cx='12.8' cy='11' rx='1.4' ry='2.5' transform='rotate(-32 12.8 11)'/%3E%3Cellipse cx='16.2' cy='11' rx='1.4' ry='2.5' transform='rotate(32 16.2 11)'/%3E%3Cellipse cx='14.5' cy='8.1' rx='1.35' ry='2.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -13,9 +13,39 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="logo" aria-hidden="true"></span><div><strong>Field Shift</strong><span>Crop rotation explorer · Finney County, Kansas</span></div></div>
+  <div class="brand">
+    <span class="logo" aria-hidden="true">
+      <svg viewBox="0 0 40 40" role="img">
+        <defs>
+          <clipPath id="lgClip"><rect width="40" height="40" rx="11"/></clipPath>
+        </defs>
+        <g clip-path="url(#lgClip)">
+          <rect width="40" height="40" fill="#24496E"/>
+          <circle cx="30.5" cy="10" r="4.2" fill="#F0C97A"/>
+          <!-- contoured crop strips: each band is one crop in the rotation -->
+          <path d="M0 21 Q20 15.5 40 21 V26 Q20 20.5 0 26 Z" fill="#8FB97A"/>
+          <path d="M0 26 Q20 20.5 40 26 V31 Q20 25.5 0 31 Z" fill="#E3B964"/>
+          <path d="M0 31 Q20 25.5 40 31 V36 Q20 30.5 0 36 Z" fill="#C08C57"/>
+          <path d="M0 36 Q20 30.5 40 36 V40 H0 Z" fill="#6E8F5C"/>
+          <!-- wheat head: filled grains read better than thin strokes at 40px -->
+          <g fill="#F6F3EC">
+            <rect x="13.75" y="12" width="1.5" height="13" rx="0.75"/>
+            <ellipse cx="12.1" cy="19.3" rx="1.5" ry="2.7" transform="rotate(-32 12.1 19.3)"/>
+            <ellipse cx="16.9" cy="19.3" rx="1.5" ry="2.7" transform="rotate(32 16.9 19.3)"/>
+            <ellipse cx="12.3" cy="15.1" rx="1.5" ry="2.7" transform="rotate(-32 12.3 15.1)"/>
+            <ellipse cx="16.7" cy="15.1" rx="1.5" ry="2.7" transform="rotate(32 16.7 15.1)"/>
+            <ellipse cx="12.8" cy="11" rx="1.4" ry="2.5" transform="rotate(-32 12.8 11)"/>
+            <ellipse cx="16.2" cy="11" rx="1.4" ry="2.5" transform="rotate(32 16.2 11)"/>
+            <ellipse cx="14.5" cy="8.1" rx="1.35" ry="2.5"/>
+          </g>
+        </g>
+      </svg>
+    </span>
+    <div class="wordmark"><strong>Field Shift</strong><span>Crop rotation explorer · Finney County, Kansas</span></div>
+  </div>
   <nav><a href="#explore">Explore</a><a href="#trends">Trends</a><a href="#method">How we know</a></nav>
   <span id="apiStatus" class="status" role="status">Checking data service…</span>
+  <span class="striplet" aria-hidden="true"></span>
 </header>
 
 <section class="hero">
