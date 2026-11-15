@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: field-shift-nasa
+    name: fieldshift-nasa
     runtime: docker
     plan: free
     dockerfilePath: ./backend/Dockerfile

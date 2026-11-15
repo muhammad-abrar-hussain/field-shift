@@ -7,7 +7,7 @@
 //  - Static host with no API (Vercel): point at the deployed backend below.
 //
 // After deploying the backend to Render, replace API_URL with that service URL,
-// e.g. "https://field-shift-nasa.onrender.com" (no trailing slash).
+// e.g. "https://fieldshift-nasa.onrender.com" (no trailing slash).
 window.API_URL = window.API_URL ?? "";
 
 window.API_BASE =
