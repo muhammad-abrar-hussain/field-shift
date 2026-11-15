@@ -40,14 +40,14 @@ details summary{cursor:pointer}
 .rangeLbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);text-align:center}.rangeLbl i{display:block;font-style:normal;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;opacity:.8}.rangeLbl .mid-v b{font-size:16px;color:var(--ink);font-family:'Space Grotesk'}
 .kv{display:grid;gap:0;font-size:14.5px}.kvrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}.kvrow:last-child{border-bottom:none}.kv span{color:var(--muted)}.kv b{font-weight:700;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.kv b i{font-style:normal;font-weight:500;color:var(--muted);font-size:12px;margin-left:1px}
 .cal{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}.cal i{height:20px;border-radius:4px;background:#E3EEDB}.cal i.bare{background:#D9B98A}.calLbl{display:grid;grid-template-columns:repeat(12,1fr);font-size:10.5px;color:var(--muted);text-align:center}
-.list+.list{margin-top:13px}.list h4{margin:0 0 5px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}.list ul{margin:0;padding-left:17px;font-size:13.5px;line-height:1.52}.list li{margin:3px 0}
+.list+.list{margin-top:15px}.list h4{margin:0 0 7px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}.list ul{margin:0;padding:0;list-style:none;font-size:13.5px;line-height:1.55}.list li{position:relative;margin:6px 0;padding-left:25px}.list li::before{position:absolute;left:0;top:0;font-size:13px;line-height:1.55;width:18px;text-align:center}.list.why li::before{content:"\1F33E"}.list.ev li::before{content:"\1F6F0\FE0F"}.list.risk li::before{content:"\26A0\FE0F"}.list.gap li::before{content:"\2753"}
 .list.risk h4{color:var(--warn)}.list.gap h4{color:var(--bad)}
 .disclaimer{font-size:12.5px;color:var(--muted);margin-top:16px}
-.block{max-width:1320px;margin:0 auto 24px;padding:24px 32px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+.block{max-width:1400px;margin:0 auto 24px;padding:30px 34px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
 .chartwrap{position:relative;height:360px;margin-top:14px}
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:8px 0 16px}.fact{background:var(--bg);border-radius:12px;padding:16px}.fact b{display:block;font-family:'Space Grotesk';font-size:28px}.fact span{font-size:13px;color:var(--muted)}
-.method{max-width:960px;color:var(--ink)}
-.sources{columns:2;font-size:14px;padding-left:18px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 26px}.fact{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:17px 18px;border-top:3px solid var(--blue)}.fact.f-1{border-top-color:#2F5F8F}.fact.f-2{border-top-color:#2E7D4F}.fact.f-3{border-top-color:#B7791F}.fact.f-4{border-top-color:#8A6AA8}.fact b{display:block;font-family:'Space Grotesk';font-size:30px;line-height:1;letter-spacing:-.02em;margin-bottom:8px;font-variant-numeric:tabular-nums}.fact span{font-size:13.5px;color:var(--muted);line-height:1.5;display:block}
+.method{margin:0;color:var(--ink);font-size:14.5px;line-height:1.65}
+.sources{margin:0;padding:0;list-style:none;display:grid;gap:0}.sources li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:9px 0 9px 26px;border-bottom:1px dashed var(--line);font-size:14px;position:relative}.sources li:last-child{border-bottom:none}.sources li::before{position:absolute;left:0;top:9px;font-size:13px;width:18px;text-align:center}.sources li.src-nasa::before{content:"\1F6F0\FE0F"}.sources li.src-usda::before{content:"\1F33E"}.sources li.src-table::before{content:"\1F4C4"}.sources li>span{font-weight:600}.sources i{font-style:normal;color:var(--muted);font-size:13px}
 .foot{text-align:center;font-size:12.5px;color:var(--muted);padding:24px}
 @media (max-width:1100px){.cards{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.panel{position:static}.hero{grid-template-columns:1fr;gap:34px;padding-top:42px}.hero-copy{max-width:60ch}.facts{grid-template-columns:1fr 1fr}}
 @media (max-width:600px){.topbar{padding:10px 16px 12px;flex-wrap:wrap;gap:12px}.wordmark span{display:none}.topbar nav{display:none}.hero,.explore{padding-left:16px;padding-right:16px}.block{margin:0 16px 16px;padding:18px}.sources{columns:1}.facts{grid-template-columns:1fr}}
@@ -159,3 +159,16 @@ body.locked{overflow:hidden}
 /* wheat markers for the measured fields */
 .cropPin{font-size:13px;line-height:18px;text-align:center;cursor:default;
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+
+/* How we know: its own surface, distinct from the page ground and the cards */
+.method-block{position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FBF9F4 100%)}
+.method-block::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,#2F5F8F 0 25%,#2E7D4F 25% 50%,#B7791F 50% 75%,#8A6AA8 75% 100%)}
+.block-head{max-width:70ch}
+.block-sub{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.6}
+.method-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px}
+.method-card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.method-card h3{margin:0 0 12px;font-size:16px}
+#modelInfo:not(:empty){margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+@media (max-width:900px){.method-grid{grid-template-columns:1fr}}

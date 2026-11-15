@@ -181,27 +181,40 @@
   <div class="chartwrap"><canvas id="trendChart" aria-label="Season rain, heat days and peak greenness by year"></canvas></div>
 </section>
 
-<section id="method" class="block">
-  <h2>How we know</h2>
-  <div class="facts">
-    <div class="fact"><b>0.118</b><span>average error on years the model never saw (NDVI), vs 0.129 for a fair baseline without weather</span></div>
-    <div class="fact"><b>80%</b><span>of real values fall inside the range we show (p10 to p90)</span></div>
-    <div class="fact"><b>r = 0.86</b><span>NASA greenness vs USDA wheat yield, 6 published years: a sanity check, not proof</span></div>
-    <div class="fact"><b>1,490</b><span>clean wheat field years from 1,000 sample fields, 2013 to 2025</span></div>
+<section id="method" class="block method-block">
+  <div class="block-head">
+    <h2>How we know</h2>
+    <p class="block-sub">Every number in this tool comes from measured data. Here is how well it held up when we tested it.</p>
   </div>
-  <p class="method">Crop health = year effect (season rain and heat days, NASA POWER) + rotation effect (how each rotation's wheat compared with the county average in the same year, NASA MODIS NDVI on USDA crop maps). Effects from few fields are shrunk toward zero, and a rotation with few examples is never shown as the best match. We also tested a LightGBM model; it did not beat this simpler one, so we did not ship it.</p>
-  <div id="modelInfo" class="hint"></div>
-  <h3>Data sources</h3>
-  <ul class="sources">
-    <li><a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> daily weather, 2000 to 2025</li>
-    <li><a href="https://lpdaac.usgs.gov/products/mod13q1v061/" target="_blank" rel="noopener">NASA MODIS MOD13Q1</a> NDVI, 250 m, 16 day</li>
-    <li><a href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap" target="_blank" rel="noopener">NASA SMAP</a> soil moisture at planting</li>
-    <li><a href="https://www.earthdata.nasa.gov/data/instruments/srtm" target="_blank" rel="noopener">NASA SRTM</a> elevation</li>
-    <li><a href="https://nassgeodata.gmu.edu/CropScape/" target="_blank" rel="noopener">USDA Cropland Data Layer</a> crop history, 2013 to 2025</li>
-    <li><a href="https://websoilsurvey.nrcs.usda.gov/" target="_blank" rel="noopener">USDA SSURGO</a> soil properties</li>
-    <li><a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS QuickStats</a> county wheat yields</li>
-    <li>Crop table: FAO 56 crop coefficients, USDA AMS and Kansas State prices</li>
-  </ul>
+
+  <div class="facts">
+    <div class="fact f-1"><b>0.118</b><span>average error on years the model never saw (NDVI), vs 0.129 for a fair baseline without weather</span></div>
+    <div class="fact f-2"><b>80%</b><span>of real values fall inside the range we show (p10 to p90)</span></div>
+    <div class="fact f-3"><b>r = 0.86</b><span>NASA greenness vs USDA wheat yield, 6 published years: a sanity check, not proof</span></div>
+    <div class="fact f-4"><b>1,490</b><span>clean wheat field years from 1,000 sample fields, 2013 to 2025</span></div>
+  </div>
+
+  <div class="method-grid">
+    <div class="method-card">
+      <h3>How the number is built</h3>
+      <p class="method">Crop health = year effect (season rain and heat days, NASA POWER) + rotation effect (how each rotation's wheat compared with the county average in the same year, NASA MODIS NDVI on USDA crop maps). Effects from few fields are shrunk toward zero, and a rotation with few examples is never shown as the best match. We also tested a LightGBM model; it did not beat this simpler one, so we did not ship it.</p>
+      <div id="modelInfo" class="hint"></div>
+    </div>
+
+    <div class="method-card">
+      <h3>Data sources</h3>
+      <ul class="sources">
+        <li class="src-nasa"><a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a><i>daily weather, 2000 to 2025</i></li>
+        <li class="src-nasa"><a href="https://lpdaac.usgs.gov/products/mod13q1v061/" target="_blank" rel="noopener">NASA MODIS MOD13Q1</a><i>NDVI, 250 m, 16 day</i></li>
+        <li class="src-nasa"><a href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap" target="_blank" rel="noopener">NASA SMAP</a><i>soil moisture at planting</i></li>
+        <li class="src-nasa"><a href="https://www.earthdata.nasa.gov/data/instruments/srtm" target="_blank" rel="noopener">NASA SRTM</a><i>elevation</i></li>
+        <li class="src-usda"><a href="https://nassgeodata.gmu.edu/CropScape/" target="_blank" rel="noopener">USDA Cropland Data Layer</a><i>crop history, 2013 to 2025</i></li>
+        <li class="src-usda"><a href="https://websoilsurvey.nrcs.usda.gov/" target="_blank" rel="noopener">USDA SSURGO</a><i>soil properties</i></li>
+        <li class="src-usda"><a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS QuickStats</a><i>county wheat yields</i></li>
+        <li class="src-table"><span>Crop table</span><i>FAO 56 crop coefficients, USDA AMS and Kansas State prices</i></li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <footer class="foot">Field Shift · NASA Space Apps Challenge 2026 · Built with NASA Earth observations and USDA data</footer>
