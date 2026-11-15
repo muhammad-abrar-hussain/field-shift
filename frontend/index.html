@@ -97,7 +97,11 @@
   <span class="striplet" aria-hidden="true"></span>
 </header>
 
-<main id="explore" class="layout">
+<main id="explore" class="explore">
+  <!-- planning bar spans both columns so the scenario reads across the whole tool -->
+  <div id="summary" class="planbar" hidden></div>
+
+  <div class="layout">
   <aside class="panel" aria-label="Your field and priorities">
     <h2>Your field</h2>
     <div class="mapwrap">
@@ -165,10 +169,10 @@
     </div>
     <div id="loading" class="loading" hidden><span class="spinner" aria-hidden="true"></span>Running the comparison on NASA data…</div>
     <div id="error" class="errbox" hidden></div>
-    <div id="summary" class="summary" hidden></div>
     <div id="cards" class="cards"></div>
     <p class="disclaimer">Field Shift supports, and never replaces, the judgment of farmers and local agricultural experts. Crop health is satellite greenness (NDVI), not yield or profit.</p>
   </section>
+  </div>
 </main>
 
 <section id="trends" class="block">

@@ -37,14 +37,43 @@
   L.control.layers({ "Map": streets, "Satellite": satellite }, null, { position: "topright" }).addTo(map);
 
   // The measured fields. Showing them stops people clicking where we have no data.
-  const fieldDots = L.layerGroup().addTo(map);
+  // 1,000 emoji markers would be 1,000 DOM nodes, so wheat heads are drawn only
+  // once you are zoomed in, and only for the points actually on screen. Zoomed
+  // out, the same points are cheap canvas dots.
+  const EMOJI_ZOOM = 12;
+  const dots = L.layerGroup().addTo(map);
+  const crops = L.layerGroup().addTo(map);
+  const cropIcon = L.divIcon({ className: "cropPin", html: "🌾", iconSize: [18, 18], iconAnchor: [9, 9] });
+  let points = [];
+
+  function paintFields() {
+    const zoomedIn = map.getZoom() >= EMOJI_ZOOM;
+    if (!zoomedIn) {
+      crops.clearLayers();
+      if (dots.getLayers().length) return;
+      points.forEach(([la, lo]) => {
+        L.circleMarker([la, lo], {
+          radius: 2.6, fillColor: "#C98A2E", fillOpacity: .92, interactive: false,
+          color: "#5A3E12", weight: 1, opacity: .65,
+        }).addTo(dots);
+      });
+      return;
+    }
+    dots.clearLayers();
+    crops.clearLayers();
+    const b = map.getBounds().pad(0.15);
+    let shown = 0;
+    for (const [la, lo] of points) {
+      if (!b.contains([la, lo])) continue;
+      L.marker([la, lo], { icon: cropIcon, interactive: false, keyboard: false }).addTo(crops);
+      if (++shown >= 400) break;                 // hard cap keeps panning smooth
+    }
+  }
+
   api("/sample-points").then((d) => {
-    (d.points || []).forEach(([la, lo]) => {
-      L.circleMarker([la, lo], {
-        radius: 2.6, fillColor: "#F0C97A", fillOpacity: .95, interactive: false,
-        color: "#5A3E12", weight: 1, opacity: .7,   // outlined so it reads on map *and* satellite
-      }).addTo(fieldDots);
-    });
+    points = d.points || [];
+    paintFields();
+    map.on("zoomend moveend", paintFields);
     $("mapNote").textContent = `${d.count} measured fields · tap within ${d.max_distance_km} km of one`;
   }).catch(() => { $("mapNote").textContent = "Tap anywhere on Finney County farmland"; });
 
@@ -132,9 +161,12 @@
     const sc = r.scenario || {};
     const yearLabel = { normal: "a normal year", dry: "a dry year", hot: "a hot and dry year" }[req.year_type] || req.year_type;
     const bestRot = rots.find((x) => x.id === best);
-    $("summary").innerHTML = `<div><span class="hint">Planning for</span><br><b>${esc(yearLabel)}</b>${sc.rain_change_pct ? ` <span class="hint">(rain ${sc.rain_change_pct}%${sc.temp_change_c ? `, +${sc.temp_change_c} °C` : ""})</span>` : ""}</div>
-      <div><span class="hint">Best match for your priorities</span><br><b>${esc(bestRot ? bestRot.name : best || "None")}</b></div>
-      <div><span class="hint">Your priorities</span><br><b>${esc(req.priorities.join(", ") || "balanced")}</b></div>`;
+    $("summary").innerHTML = `
+      <div><span class="lbl">Planning for</span><b>${esc(yearLabel)}</b>${
+        sc.rain_change_pct ? `<span class="note">rain ${sc.rain_change_pct}%${sc.temp_change_c ? `, +${sc.temp_change_c} °C` : ""}</span>` : ""}</div>
+      <div><span class="lbl">Best match for your priorities</span><b>${esc(bestRot ? bestRot.name : best || "None")}</b>${
+        bestRot && bestRot.confidence ? `<span class="note">${esc(bestRot.confidence)} confidence</span>` : ""}</div>
+      <div><span class="lbl">Your priorities</span><b>${esc(req.priorities.join(", ") || "balanced")}</b><span class="note">${esc(state.water === "irrigated" ? "irrigated" : "rain only")} · ${esc(state.soil)} soil</span></div>`;
     $("summary").hidden = false;
     $("cards").innerHTML = rots.map((x) => card(x, x.id === best)).join("");
   }
