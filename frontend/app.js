@@ -87,6 +87,9 @@
     state.lat = +(+lat).toFixed(5); state.lon = +(+lon).toFixed(5);
     const ll = [state.lat, state.lon];
     if (marker) marker.setLatLng(ll); else marker = L.marker(ll, { icon: pin }).addTo(map);
+    const c = $("coord");
+    c.textContent = `${state.lat.toFixed(4)}, ${state.lon.toFixed(4)}`;
+    c.hidden = false;
     $("fieldInfo").textContent = `Field at ${state.lat}, ${state.lon}. Looking up soil and crop history…`;
     $("go").disabled = false;
     try {
